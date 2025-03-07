@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="kiosk.js" defer></script>
+    <link rel="stylesheet" href="kiosk.css">
+</head>
+
+<body>
+<div class="container">
+    <div id="product-grid"></div> <!-- Grid i venstre side -->
+
+    <div id="order-summary">
+        <div id="titel">
+            <h2>Din Bestilling</h2>
+            <a href="Edit/editKiosk.html" id="edit">
+                <img src="images/edit.png" alt="Rediger bestilling">
+            </a>
+
+        </div>
+        <div id="order-details">
+            <div id="order">
+                <ul id="order-list"></ul> <!-- Her vises de valgte produkter -->
+            </div>
+        </div>
+
+
+        <div id="handle-purchase">
+            <button id="confirm-purchase">Bekræft køb</button>
+            <button id="cancel-purchase">Annuller køb</button>
+            <p id="top"><strong>Total:</strong> <span id="order-total">0</span></p>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>
