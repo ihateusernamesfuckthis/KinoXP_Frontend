@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="editKiosk.js" defer></script>
+    <link rel="stylesheet" href="editKiosk.css">
+</head>
+
+
+<body>
+<div class="container">
+    <div id="product-grid"></div> <!-- Grid i venstre side -->
+
+    <div id="edit-summary">
+
+        <div id="titel">
+            <h2>Rediger og tilføj produkter</h2>
+            <a href="\KinoXP_Frontend\kiosk\kiosk.html" id="edit">
+                <img src="../images/back.png">
+            </a>
+        </div>
+
+        <div id="edit-details">
+            <label for="edit-name">Navn:</label>
+            <input type="text" id="edit-name">
+
+            <label for="edit-price">Pris:</label>
+            <input type="number" id="edit-price">
+
+            <label for="edit-category">Kategori:</label>
+            <select id="edit-category">
+                <option value="snacks">Snacks</option>
+                <option value="candy">Slik</option>
+                <option value="drinks">Drikkevarer</option>
+                <option value="chocolate">Chokolade</option>
+            </select>
+
+            <label for="edit-image">Billede URL:</label>
+            <input type="text" id="edit-image">
+        </div>
+
+
+        <div id="handle-edit">
+            <button id="confirm-edit">Bekræft</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
