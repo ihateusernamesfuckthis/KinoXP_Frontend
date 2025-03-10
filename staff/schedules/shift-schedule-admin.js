@@ -4,10 +4,10 @@ const standardShiftDuration = 4; // Default shift duration in hours
 const calendar = document.querySelector(".calendar");
 const shiftInfoBox = document.querySelector(".shift-info");
 let editing = false;
-const calendarItemList = [];
 const header = document.querySelector(".calendar-header");
 const today = new Date();
-const options = {weekday: 'long', month: 'numeric', day: 'numeric', year: 'numeric'};
+const calendarStartDate = new Date();
+const calendarEndDate = new Date(today.getTime() + 6 * 24 * 60 * 60 * 1000);
 
 function getEntityColor(entityId) {
     const colors = [
@@ -46,40 +46,52 @@ function hideLoader() {
     }
 }
 
-// Generate headers for 7 days
-for (let i = 0; i < 7; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
+function generateDayHeaders(startDate, endDate) {
+    header.innerHTML = "";
+    const currentDate = new Date(startDate);
+    const end = new Date(endDate);
 
-    const dayHeader = document.createElement("div");
-    dayHeader.textContent = date.toLocaleDateString('da-DK', options).charAt(0).toUpperCase() + date.toLocaleDateString('da-DK', options).slice(1);
-    dayHeader.classList.add("header-item");
-    header.appendChild(dayHeader);
+    while (currentDate <= end) {
+        const options = {weekday: 'long', month: 'numeric', day: 'numeric', year: 'numeric'};
+        const dayHeader = document.createElement("div");
+        dayHeader.textContent = currentDate.toLocaleDateString('da-DK', options).charAt(0).toUpperCase() + currentDate.toLocaleDateString('da-DK', options).slice(1);
+        dayHeader.classList.add("header-item");
+        header.appendChild(dayHeader);
+
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
 }
 
-
-// Generate time labels
-for (let h = calendarStartHour; h < calendarEndHour; h++) {
-    const label = document.createElement("div");
-    label.classList.add("time-label");
-    label.textContent = `${h}:00`;
-    label.style.height = `calc(100% / ${calendarEndHour - calendarStartHour})`;
-    document.querySelector(".time-labels").appendChild(label);
+function generateTimeLabels(calendarStartHour, calendarEndHour) {
+    document.querySelector(".time-labels").innerHTML = "";
+    // Generate time labels
+    for (let h = calendarStartHour; h < calendarEndHour; h++) {
+        const label = document.createElement("div");
+        label.classList.add("time-label");
+        label.textContent = `${h}:00`;
+        label.style.height = `calc(100% / ${calendarEndHour - calendarStartHour})`;
+        document.querySelector(".time-labels").appendChild(label);
+    }
 }
 
-// Create 7 day columns
-for (let i = 0; i < 7; i++) {
-    const dayElement = document.createElement("div");
-    dayElement.classList.add("day");
-    const today = new Date();
-    today.setDate(today.getDate() + i); // Increment the day based on the loop index
-    dayElement.dataset.date = today.toISOString().split('T')[0]; // Set the date in YYYY-MM-DD format
-    dayElement.addEventListener('click', function (event) {
-        if (!editing) {
-            addCalendarItem(event);
-        }
-    });
-    calendar.appendChild(dayElement);
+function createDaysInRange(startDate, endDate) {
+    calendar.innerHTML = "";
+    const days = [];
+    let currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+        const dayElement = document.createElement("div");
+        dayElement.classList.add("day");
+        dayElement.dataset.date = currentDate.toISOString().split('T')[0]; // Set the date in YYYY-MM-DD format
+        dayElement.addEventListener('click', function (event) {
+            if (!editing) {
+                addCalendarItem(event);
+            }
+        });
+        days.push(dayElement);
+        currentDate.setDate(currentDate.getDate() + 1);
+        calendar.appendChild(dayElement);
+    }
 }
 
 async function saveShift(shift) {
@@ -113,14 +125,14 @@ async function updateShift(shift) {
 async function updateEmployeeTable() {
     showLoader();
     try {
-        const startDate = new Date();
-        const endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const formattedStartDate = new Date(calendarStartDate).toISOString().split('T')[0];
+        const formattedEndDate = new Date(calendarEndDate).toISOString().split('T')[0];
 
-        const response = await fetch(`http://localhost:8080/api/shifts/range?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`);
+        const response = await fetch(`http://localhost:8080/api/shifts/range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const shifts = await response.json();
-        calendarItemList.length = 0; // Clear existing data
+        const calendarItemList = [];
 
         shifts.forEach(shift => {
             calendarItemList.push({
@@ -133,7 +145,7 @@ async function updateEmployeeTable() {
             });
         });
 
-        renderCalendarItemList();
+        renderCalendarItemList(calendarItemList);
     } catch (error) {
         console.error("Failed to fetch shifts:", error);
     } finally {
@@ -141,7 +153,9 @@ async function updateEmployeeTable() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", updateEmployeeTable);
+document.addEventListener("DOMContentLoaded", () => {
+    updateEmployeeTable();
+});
 
 function fillOutSelect() {
     fetch("http://localhost:8080/api/employees")
@@ -275,7 +289,7 @@ function updateCalendarItemWidth(calendarDayElement) {
 }
 
 
-function renderCalendarItemList() {
+function renderCalendarItemList(calendarItemList) {
     // Clear days
     const calendarDayList = calendar.querySelectorAll(".day");
     calendarDayList.forEach((day) => {
@@ -368,4 +382,25 @@ document.getElementById("shiftForm").addEventListener("submit", function (event)
 // Cancel the shift creation or editing
 document.getElementById("cancel-shift").addEventListener("click", function () {
     closeShiftEditForm();
+});
+
+function loadCalendar() {
+    generateDayHeaders(calendarStartDate, calendarEndDate);
+    generateTimeLabels(calendarStartHour, calendarEndHour);
+    createDaysInRange(calendarStartDate, calendarEndDate);
+    updateEmployeeTable();
+}
+
+loadCalendar();
+
+document.getElementById("prev-week").addEventListener("click", function () {
+    calendarStartDate.setDate(calendarStartDate.getDate() - 7);
+    calendarEndDate.setDate(calendarEndDate.getDate() - 7);
+    loadCalendar();
+});
+
+document.getElementById("next-week").addEventListener("click", function () {
+    calendarStartDate.setDate(calendarStartDate.getDate() + 7);
+    calendarEndDate.setDate(calendarEndDate.getDate() + 7);
+    loadCalendar();
 });
