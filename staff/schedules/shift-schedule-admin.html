@@ -10,29 +10,31 @@
 <body>
 <h2>Administrer Vagtplan</h2>
 <div id="calendar-container">
-    <div id="calendar-info-box"></div>
-    <div style="display: flex; height: 80vh;">
+    <div class="calendar-header"></div>
+    <div class="calendar-body">
         <div class="time-labels"></div>
         <div class="calendar"></div>
-        <div class="shift-info">
-            <h3>Edit Shift</h3>
-            <form id="shiftForm">
-                <label for="employeeId">Medarbejder:</label>
-                <select id="employeeId" required>
-                    <option value="">Vælg medarbejder</option>
-                </select>
-                <label for="date">Dato:</label>
-                <input type="date" id="date" required>
+    </div>
+    <div class="shift-info">
+        <h3>Opret vagt</h3>
+        <form id="shiftForm">
+            <input type="number" id="shiftId" hidden>
+            <label for="employeeId">Medarbejder:</label>
+            <select id="employeeId" required>
+                <option value="">Vælg medarbejder</option>
+            </select>
+            <label for="date">Dato:</label>
+            <input type="date" id="date" required>
 
-                <label for="startTime">Start Tid:</label>
-                <input type="time" id="startTime" required>
+            <label for="startTime">Start Tid:</label>
+            <input type="time" id="startTime" required>
 
-                <label for="endTime">Slut Tid:</label>
-                <input type="time" id="endTime" required>
-                <button id="save-shift" type="submit">Save Shift</button>
-            </form>
-            <button id="cancel-shift" class="cancel">Cancel</button>
-        </div>
+            <label for="endTime">Slut Tid:</label>
+            <input type="time" id="endTime" required>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <button id="save-shift" type="submit">Save Shift</button>
+        </form>
+        <button id="cancel-shift" class="cancel">Cancel</button>
     </div>
 </div>
 </body>
