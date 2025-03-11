@@ -1,177 +1,152 @@
+const url = "http://localhost:8080"
+//const url = "";
+
 const calendarStartHour = 8;
 const calendarEndHour = 22;
-const standardShiftDuration = 4; // Default shift duration in hours
+const standardShiftDuration = 4;
 const calendar = document.querySelector(".calendar");
-const shiftInfoBox = document.querySelector(".shift-info");
-let editing = false;
 const header = document.querySelector(".calendar-header");
 const today = new Date();
 const calendarStartDate = new Date();
-const calendarEndDate = new Date(today.getTime() + 6 * 24 * 60 * 60 * 1000);
+const calendarEndDate = new Date(today.setDate(today.getDate() + 6));
+let editing = false;
+const shiftInfoBox = document.querySelector(".shift-info");
 
-function getEntityColor(entityId) {
-    const colors = [
-        "#B4E1D1",  // Soft Mint
-        "#F1D0A9",  // Pale Peach
-        "#D1C6E1",  // Lavender Mist
-        "#A3D3C1",  // Light Seafoam
-        "#F5B8B8",  // Soft Rose
-        "#C6E3F6",  // Powder Blue
-        "#E6D1B3",  // Sandy Beige
-        "#D1F2F1",  // Misty Aqua
-        "#F1D7E0",  // Light Blush
-        "#D3E6E3"   // Soft Teal
-    ];
-    return colors[entityId % colors.length]; //Make sure it loops colors
-}
-
-function showLoader() {
-    let loader = document.querySelector(".loader-container");
-    if (!loader) {
-        const loaderContainer = document.createElement("div");
-        loaderContainer.classList.add("loader-container");
-
-        const loader = document.createElement("div");
-        loader.classList.add("loader");
-
-        loaderContainer.appendChild(loader);
-        document.body.appendChild(loaderContainer);
+const saveShift = async (shift) => {
+    try {
+        const response = await fetch(`${url}/api/shifts`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(shift),
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    } catch (error) {
+        console.error("Failed to save shift:", error);
     }
-}
+};
 
-function hideLoader() {
-    let loader = document.querySelector(".loader-container");
-    if (loader) {
+const updateShift = async (shift) => {
+    try {
+        const response = await fetch(`${url}/api/shifts/${shift.id}`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(shift),
+        });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    } catch (error) {
+        console.error("Failed to update shift:", error);
+    }
+};
+
+const updateEmployeeTable = async () => {
+    toggleLoader(true);
+    try {
+        const calendarEmployeeId = document.getElementById("calendarEmployeeId").value;
+        const urlPath = calendarEmployeeId ? `/api/shifts/employee/${calendarEmployeeId}/range` : "/api/shifts/range";
+        const start = calendarStartDate.toISOString().split("T")[0];
+        const end = calendarEndDate.toISOString().split("T")[0];
+
+        const response = await fetch(`${url}${urlPath}?startDate=${start}&endDate=${end}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const shifts = await response.json();
+        renderCalendarItemList(
+            shifts.map(({id, employee, date, startTime, endTime}) => ({
+                id,
+                entityId: employee.id,
+                title: employee.name + " " + employee.role,
+                date,
+                startTime,
+                endTime,
+            }))
+        );
+    } catch (error) {
+        console.error("Failed to fetch shifts:", error);
+    } finally {
+        toggleLoader(false);
+    }
+};
+
+document.addEventListener("DOMContentLoaded", updateEmployeeTable);
+
+document.getElementById("calendarEmployeeId").addEventListener("change", async () => {
+    updateEmployeeTable().catch(console.error);
+});
+
+const getEntityColor = (id) => ["#B4E1D1", "#F1D0A9", "#D1C6E1", "#A3D3C1", "#F5B8B8", "#C6E3F6", "#E6D1B3", "#D1F2F1", "#F1D7E0", "#D3E6E3"][id % 10];
+
+const toggleLoader = (show) => {
+    const loader = document.querySelector(".loader-container");
+    if (show && !loader) {
+        const container = document.createElement("div");
+        container.classList.add("loader-container");
+        container.innerHTML = `<div class="loader"></div>`;
+        calendar.appendChild(container);
+    } else if (!show && loader) {
         loader.remove();
     }
-}
+};
 
-function generateDayHeaders(startDate, endDate) {
+const generateDayHeaders = (startDate, endDate) => {
     header.innerHTML = "";
-    const currentDate = new Date(startDate);
-    const end = new Date(endDate);
-
-    while (currentDate <= end) {
-        const options = {weekday: 'long', month: 'numeric', day: 'numeric', year: 'numeric'};
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
         const dayHeader = document.createElement("div");
-        dayHeader.textContent = currentDate.toLocaleDateString('da-DK', options).charAt(0).toUpperCase() + currentDate.toLocaleDateString('da-DK', options).slice(1);
+        dayHeader.textContent = d.toLocaleDateString("da-DK", {
+            weekday: "long",
+            month: "numeric",
+            day: "numeric",
+            year: "numeric"
+        }).replace(/^\w/, (c) => c.toUpperCase());
+
         dayHeader.classList.add("header-item");
         header.appendChild(dayHeader);
-
-        currentDate.setDate(currentDate.getDate() + 1);
     }
-}
+};
 
-function generateTimeLabels(calendarStartHour, calendarEndHour) {
-    document.querySelector(".time-labels").innerHTML = "";
-    // Generate time labels
+const generateTimeLabels = () => {
+    const container = document.querySelector(".time-labels");
+    container.innerHTML = "";
     for (let h = calendarStartHour; h < calendarEndHour; h++) {
         const label = document.createElement("div");
         label.classList.add("time-label");
         label.textContent = `${h}:00`;
         label.style.height = `calc(100% / ${calendarEndHour - calendarStartHour})`;
-        document.querySelector(".time-labels").appendChild(label);
+        container.appendChild(label);
     }
-}
+};
 
-function createDaysInRange(startDate, endDate) {
+const createDaysInRange = (startDate, endDate) => {
     calendar.innerHTML = "";
-    const days = [];
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-        const dayElement = document.createElement("div");
-        dayElement.classList.add("day");
-        dayElement.dataset.date = currentDate.toISOString().split('T')[0]; // Set the date in YYYY-MM-DD format
-        dayElement.addEventListener('click', function (event) {
-            if (!editing) {
-                addCalendarItem(event);
-            }
-        });
-        days.push(dayElement);
-        currentDate.setDate(currentDate.getDate() + 1);
-        calendar.appendChild(dayElement);
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const day = document.createElement("div");
+        day.classList.add("day");
+        day.dataset.date = d.toISOString().split("T")[0];
+        day.addEventListener("click", (e) => !editing && addCalendarItem(e));
+        calendar.appendChild(day);
     }
-}
+};
 
-async function saveShift(shift) {
-    const response = await fetch(`http://localhost:8080/api/shifts`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(shift)
-    });
-
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-}
-
-async function updateShift(shift) {
-    const response = await fetch(`http://localhost:8080/api/shifts/${shift.id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(shift)
-    });
-
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-}
-
-async function updateEmployeeTable() {
-    showLoader();
+const fillOutSelect = async () => {
     try {
-        const formattedStartDate = new Date(calendarStartDate).toISOString().split('T')[0];
-        const formattedEndDate = new Date(calendarEndDate).toISOString().split('T')[0];
+        const response = await fetch(`${url}/api/employees`);
+        if (!response.ok) throw new Error("Failed to fetch employees");
 
-        const response = await fetch(`http://localhost:8080/api/shifts/range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        const shifts = await response.json();
-        const calendarItemList = [];
-
-        shifts.forEach(shift => {
-            calendarItemList.push({
-                id: shift.id,
-                entityId: shift.employee.id,
-                title: shift.employee.name,
-                date: shift.date,
-                startTime: shift.startTime,
-                endTime: shift.endTime
-            });
+        const employees = await response.json();
+        const shiftFormSelect = document.getElementById("employeeId");
+        const calendarEmployeeSelect = document.getElementById("calendarEmployeeId");
+        employees.forEach(({id, name}) => {
+            const option = document.createElement("option");
+            option.value = id;
+            option.textContent = name;
+            shiftFormSelect.appendChild(option);
+            calendarEmployeeSelect.appendChild(option.cloneNode(true));
         });
-
-        renderCalendarItemList(calendarItemList);
     } catch (error) {
-        console.error("Failed to fetch shifts:", error);
-    } finally {
-        hideLoader();
+        console.error("Failed to load employees:", error);
     }
-}
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    updateEmployeeTable();
-});
-
-function fillOutSelect() {
-    fetch("http://localhost:8080/api/employees")
-        .then(response => response.json())
-        .then(employees => {
-            const select = document.getElementById("employeeId");
-            employees.forEach(employee => {
-                const option = document.createElement("option");
-                option.value = employee.id;
-                option.text = employee.name;
-                select.appendChild(option);
-            });
-        });
-}
-
-fillOutSelect();
+fillOutSelect().catch(console.error);
 
 function addCalendarItem(event) {
     const calendarItem = createDefaultCalenderItem(event);
@@ -302,6 +277,8 @@ function renderCalendarItemList(calendarItemList) {
 
 // Open the shift info form to edit the shift
 function openShiftEditForm(shift) {
+    editing = true;
+
     const calendarDayElements = Array.from(calendar.querySelectorAll(".day"));
     const index = calendarDayElements.findIndex(element => element.dataset.date === shift.date);
     const calendarDayElement = calendarDayElements[index];
@@ -320,7 +297,6 @@ function openShiftEditForm(shift) {
         shiftInfoBox.style.left = `${leftPositionInfobox}px`;
     }
 
-    editing = true;
     if (shift.entityId) {
         document.getElementById("employeeId").value = shift.entityId;
     }
@@ -341,7 +317,7 @@ function closeShiftEditForm() {
     editing = false;
     document.getElementById("shiftForm").reset();
     document.getElementById("error-message").style.display = "none";
-    updateEmployeeTable();
+    updateEmployeeTable().catch(console.error);
 }
 
 // Save the shift after editing
@@ -369,11 +345,11 @@ document.getElementById("shiftForm").addEventListener("submit", function (event)
     if (shiftId) {
         shift.id = shiftId;
         updateShift(shift).then(() => {
-            updateEmployeeTable();
+            updateEmployeeTable().catch(console.error);
         });
     } else {
         saveShift(shift).then(() => {
-            updateEmployeeTable();
+            updateEmployeeTable().catch(console.error);
         });
     }
     closeShiftEditForm();
@@ -388,10 +364,12 @@ function loadCalendar() {
     generateDayHeaders(calendarStartDate, calendarEndDate);
     generateTimeLabels(calendarStartHour, calendarEndHour);
     createDaysInRange(calendarStartDate, calendarEndDate);
-    updateEmployeeTable();
+    updateEmployeeTable().catch(console.error);
 }
 
-loadCalendar();
+document.addEventListener("DOMContentLoaded", () => {
+    loadCalendar();
+});
 
 document.getElementById("prev-week").addEventListener("click", function () {
     calendarStartDate.setDate(calendarStartDate.getDate() - 7);
