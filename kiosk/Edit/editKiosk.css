@@ -1,0 +1,197 @@
+/* Grundlæggende styling til hele siden */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: flex-start; /* Indhold starter i venstre side */
+    align-items: flex-start; /* Justerer toppen */
+    height: 100vh;
+}
+
+/* Wrapper der indeholder grid + order summary */
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    gap: 20px; /* Afstand mellem grid og order summary */
+}
+
+/* Grid-container til produkterne */
+#product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Automatisk antal kolonner */
+    gap: 15px;
+    padding: 20px;
+    max-width: 2fr; /* Begræns bredden af grid'et */
+    width: 100%;
+    margin-right: 350px;
+}
+
+/* Styling af produktkort */
+.productCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.productCard:hover {
+    transform: scale(1.05);
+}
+
+.product-image {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 5px;
+    background-color: #eee;
+}
+
+.productCard h3 {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.productCard p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Ordreoversigt i højre side */
+#edit-summary {
+    position: fixed;
+    right: 20px; /* Afstand fra højre side */
+    top: 20px; /* Afstand fra toppen */
+    bottom: 160px;
+    width: 300px; /* Fast bredde */
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow-y: hidden; /* Scroll inde i ordreoversigten hvis nødvendig */
+}
+
+#titel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#titel h2 {
+    font-size: 20px;
+    margin: 0px;
+}
+
+#edit img {
+    width: 24px; /* Justér billedets størrelse */
+    height: 24px; /* Bevarer proportioner */
+    cursor: pointer; /* Indikerer, at det er klikbart */
+}
+
+#edit-details {
+    flex-grow: 1; /* Gør den fleksibel, så den fylder pladsen */
+    overflow-y: auto; /* Tilføjer scroll, hvis der er mange produkter */
+    min-height: 80%;
+    max-height: 80%/* Sikrer at knapperne altid vises */
+}
+
+#edit-details {
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 70%;
+    max-height: 80%;
+    padding: 20px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px; /* Giver lidt afstand mellem felterne */
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling til labels */
+#edit-details label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Styling til inputfelter og select */
+#edit-details input,
+#edit-details select {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+}
+
+/* Når man fokuserer på et inputfelt */
+#edit-details input:focus,
+#edit-details select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+
+/* Styling til knappen */
+#confirm-edit {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+#confirm-edit:hover {
+    background-color: #0056b3;
+}
+
+#handle-edit {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    background: white;
+}
+
+
+
+
+
+/* Responsivt design */
+@media (max-width: 700px) {
+    .container {
+        flex-direction: column; /* Stabler grid og order-summary vertikalt */
+        align-items: center;
+    }
+
+    #product-grid {
+        max-width: 100%;
+    }
+
+    #edit-summary {
+        width: 100%;
+        min-height: 200px;
+    }
+}
