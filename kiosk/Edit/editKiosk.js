@@ -77,7 +77,7 @@ selectedProduct = product;
     document.getElementById("edit-name").value = product.name;
     document.getElementById("edit-price").value = product.price;
     document.getElementById("edit-category").value = product.category;
-    document.getElementById("edit-image").value = product.image;
+    //document.getElementById("edit-image").value = product.image;
 }
 
 confirmButton.addEventListener("click", async () => {
@@ -85,7 +85,6 @@ confirmButton.addEventListener("click", async () => {
         name: document.getElementById("edit-name").value,
         price: document.getElementById("edit-price").value,
         category: document.getElementById("edit-category").value,
-        image: document.getElementById("edit-image").value
     };
 
     if (selectedProduct) {
@@ -131,7 +130,6 @@ function addNewProduct() {
     document.getElementById("edit-name").value = "";
     document.getElementById("edit-price").value = "";
     document.getElementById("edit-category").value = "snacks"; // Default kategori
-    document.getElementById("edit-image").value = "";
 
     console.log("Opretter nyt produkt");
 }
