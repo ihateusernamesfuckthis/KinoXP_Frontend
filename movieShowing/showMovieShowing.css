@@ -1,0 +1,55 @@
+#movieSchedule {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+#movieSchedule h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.day-container {
+    width: 13%;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h3 {
+    background: #888;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+p {
+    margin: 5px 0;
+}
+
+
+.no-movies {
+    font-style: italic;
+    color: #000000;
+}
+
+.movie-showing {
+    background-color: #6ef56e;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+
+}
+
+
+.day-container a {
+    text-decoration: none;
+    display: block;
+}
