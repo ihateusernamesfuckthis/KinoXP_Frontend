@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Film forvisning</title>
+    <link rel="stylesheet" href="createMovieShowing.css">
+    <script src="createMovieShowing.js" defer></script>
+</head>
+<body>
+<h2>Opret film visning</h2>
+<div id="calendar-container">
+    <div class="calendar-controls">
+        <button id="prev-week">Forrige uge</button>
+        <button id="next-week">Næste uge</button>
+    </div>
+    <div class="calendar-header"></div>
+    <div class="calendar-body">
+        <div class="time-labels"></div>
+        <div class="calendar"></div>
+    </div>
+    <div class="movie-showing-info">
+        <h3>Opret vagt</h3>
+        <form id="movieShowingForm">
+            <input type="number" id="movieShowingId" hidden>
+            <label for="movieId">Film:</label>
+            <select id="movieId" required>
+                <option value="">Vælg film</option>
+            </select>
+            <label for="movieHallId">Film sal:</label>
+            <select id="movieHallId" required>
+                <option value="">Vælg film sal</option>
+            </select>
+            <label for="date">Dato:</label>
+            <input type="date" id="date" required>
+
+            <label for="startTime">Start Tid:</label>
+            <input type="time" id="startTime" required>
+
+            <label for="endTime">Slut Tid:</label>
+            <input type="time" id="endTime" disabled>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <button id="save-shift" type="submit">Save film forvisning</button>
+        </form>
+        <button id="cancel-shift" class="cancel">Cancel</button>
+    </div>
+</div>
+</body>
+</html>
