@@ -1,4 +1,3 @@
-
 async function fetchMovieShowings(movieId) {
     try {
         const response = await fetch(`http://localhost:8080/api/movieShowingList/${movieId}`);
@@ -163,8 +162,12 @@ function calculateEndTime(startTime, length) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const movieId = 1; // Replace with the actual movie ID you want to fetch showings for
-    const movieTitle = "Movie Title"; // Replace with the actual movie title
-    displayMovies(movieId, movieTitle);
+    const movieId = sessionStorage.getItem('movieId');
+    const movieTitle = sessionStorage.getItem('movieTitle')
+    if (movieId) {
+        displayMovies(movieId, movieTitle);
+    } else {
+        console.error("Movie ID not found in sessionStorage.");
+    }
 });
 
