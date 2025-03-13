@@ -21,11 +21,11 @@ function getLayoutSize(movieHallId, bookedSeats) {
     let seatLength;
 
     if (movieHallId === '1') {
-        rowLength = 20;
-        seatLength = 12;
+        rowLength = 12;
+        seatLength = 20;
     } else if (movieHallId === '2') {
-        rowLength = 25;
-        seatLength = 16;
+        rowLength = 16;
+        seatLength = 25;
     }
 
     if (rowLength !== undefined && seatLength !== undefined) {
