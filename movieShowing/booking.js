@@ -1,6 +1,5 @@
 const movieHallId = sessionStorage.getItem('movieHallId');
 const showingId = sessionStorage.getItem('showingId');
-const movieId = sessionStorage.getItem('movieId');
 
 let maxTickets = 0;
 let selectedSeats = [];
