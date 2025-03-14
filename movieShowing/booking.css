@@ -1,3 +1,8 @@
+.seat-container-wrapper {
+    display: flex;
+    gap: 20px; 
+}
+
 .seat-container {
     display: grid;
     gap: 5px;
@@ -16,4 +21,17 @@
     font-weight: bold;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+}
+
+.seat-line {
+    height: 2px;
+    background-color: black;
+    margin-top: 10px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
 }
