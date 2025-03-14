@@ -1,3 +1,5 @@
+const URL = "https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net"
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('opretFilmBtn').addEventListener('click', async function () {
         const filmData = {
@@ -16,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/movie/addmovie', {
+            const response = await fetch(`${URL}/api/movie/addmovie`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(filmData)

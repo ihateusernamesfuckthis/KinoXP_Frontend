@@ -1,6 +1,7 @@
-const URL = 'http://localhost:8080/api/products';
-//const URL = 'https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net/api/products';
-const orderURL = "http://localhost:8080/api/orders";
+//const URL = 'http://localhost:8080/api/products';
+const URL = 'https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net/api/products';
+// const orderURL = "http://localhost:8080/api/orders";
+const orderURL = "https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net/api/orders";
 
 //midlertidige placeholder billeder til udvikling
 const categoryImages = {

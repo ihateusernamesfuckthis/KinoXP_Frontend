@@ -1,5 +1,5 @@
-const url = "http://localhost:8080"
-//const url = "";
+// const url = "http://localhost:8080"
+const url = "https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net";
 
 const calendarStartHour = 8;
 const calendarEndHour = 22;

@@ -1,11 +1,12 @@
 const movieHallId = sessionStorage.getItem('movieHallId');
 const showingId = sessionStorage.getItem('showingId');
+const URL = "https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net";
 
 let maxTickets = 0;
 let selectedSeats = [];
 
 function getBookedSeats(showingId) {
-    fetch(`http://localhost:8080/api/booking/${showingId}`)
+    fetch(`${URL}/api/booking/${showingId}`)
         .then(response => response.json())
         .then(bookedSeats => {
             getLayoutSize(movieHallId, bookedSeats);
@@ -144,7 +145,7 @@ function bookSeats(selectedSeats) {
     }
 
 
-    fetch(`http://localhost:8080/api/booking/${showingId}`)
+    fetch(`${URL}/api/booking/${showingId}`)
         .then(response => response.json())
         .then(bookedSeats => {
             bookedSeats.forEach(seat => {
@@ -162,7 +163,7 @@ function bookSeats(selectedSeats) {
                 }
             })
 
-            fetch(`http://localhost:8080/api/booking/${showingId}`, {
+            fetch(`${URL}/api/booking/${showingId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

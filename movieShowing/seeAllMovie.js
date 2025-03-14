@@ -1,4 +1,5 @@
-const URL = "http://localhost:8080";
+// const URL = "http://localhost:8080";
+const URL = "https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net";
 
 document.addEventListener("DOMContentLoaded", function () {
     fetch(`${URL}/api/movie`)
