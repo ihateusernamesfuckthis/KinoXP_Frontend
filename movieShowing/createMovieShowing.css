@@ -110,7 +110,7 @@ body {
     padding-right: 5px;
 }
 
-.shift-info {
+.movie-showing-info {
     padding: 10px;
     border: 1px solid #ccc;
     background-color: #f9f9f9;
@@ -124,20 +124,20 @@ body {
     box-sizing: border-box;
 }
 
-.shift-info input {
+.movie-showing-info input {
     margin-bottom: 10px;
     padding: 5px;
     width: 100%;
     box-sizing: border-box;
 }
 
-.shift-info .error-message {
+.movie-showing-info .error-message {
     color: red;
     font-size: 12px;
     margin-bottom: 5px;
 }
 
-.shift-info button {
+.movie-showing-info button {
     padding: 5px 10px;
     background-color: #007bff;
     color: white;
@@ -145,11 +145,11 @@ body {
     cursor: pointer;
 }
 
-.shift-info button.cancel {
+.movie-showing-info button.cancel {
     background-color: #dc3545;
 }
 
-#movieShowingForm {
+#shiftForm {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
