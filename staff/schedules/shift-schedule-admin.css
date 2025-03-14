@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/*Loader styling*/
+
+.loader-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 255, 0.3);
+    border-top-color: blue;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+/*Calendar styling*/
+#calendar-container {
+    position: relative;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.calendar-controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+.calendar {
+    display: flex;
+    width: 100%;
+    border-top: 1px solid #ccc;
+    position: relative;
+    padding-top: 5px;
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    padding: 5px 0px;
+    font-weight: bold;
+    margin-left: 50px;
+    border-top: 1px solid #ccc;
+}
+
+.header-item {
+    padding: 5px;
+    border-left: 1px solid #ddd;
+}
+
+.calendar-body {
+    display: flex;
+    height: 80vh;
+}
+
+.day {
+    flex: 1;
+    border-left: 1px solid #ddd;
+    position: relative;
+    padding: 5px;
+}
+
+.calendarItem {
+    position: absolute;
+    background-color: var(--entity-color);
+    border: 1px solid var(--entity-color);
+    padding: 5px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.time-labels {
+    width: 50px;
+    position: relative;
+    left: 0;
+    top: 0;
+    height: 100%;
+    flex: 1 0 50px;
+    padding-top: 5px;
+}
+
+.time-label {
+    font-size: 12px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.shift-info {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    height: 60%;
+    width: 20%;
+    min-width: 400px;
+    box-sizing: border-box;
+}
+
+.shift-info input {
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.shift-info .error-message {
+    color: red;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.shift-info button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.shift-info button.cancel {
+    background-color: #dc3545;
+}
+
+#movieShowingForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}

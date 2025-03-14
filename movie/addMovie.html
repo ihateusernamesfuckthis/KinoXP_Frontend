@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <h2>Opret en ny film</h2>
+    <input type="text" id="filmTitel" placeholder="Film titel" required>
+    <textarea id="filmBeskrivelse" placeholder="Film beskrivelse" required></textarea>
+    <input type="number" id="filmVarighed" placeholder="Varighed (minutter)" min="0" required>
+    <input type="text" id="filmGenre" placeholder="Genre" required>
+    <input type="number" id="filmAldersgrænse" placeholder="Aldersgrænse" min="0" required>
+    <input type="text" id="filmInstruktør" placeholder="Instruktør" required>
+    <input type="text" id="filmBillede" placeholder="Billede URL" required>
+    <button id="opretFilmBtn">Opret Film</button>
+</div>
+<script src="/header/header.js"></script>
+<script src="addMovie.js"></script>
+</body>
+</html>

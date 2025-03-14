@@ -8,6 +8,7 @@ body {
     justify-content: flex-start; /* Indhold starter i venstre side */
     align-items: flex-start; /* Justerer toppen */
     height: 100vh;
+    flex-direction: column;
 }
 
 /* Wrapper der indeholder grid + order summary */
@@ -71,7 +72,7 @@ body {
 #edit-summary {
     position: fixed;
     right: 20px; /* Afstand fra højre side */
-    top: 20px; /* Afstand fra toppen */
+    top: 100px; /* Afstand fra toppen */
     bottom: 160px;
     width: 300px; /* Fast bredde */
     background: white;

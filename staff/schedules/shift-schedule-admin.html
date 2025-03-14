@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vagtplan Administration</title>
+    <link rel="stylesheet" href="shift-schedule-admin.css">
+    <script src="shift-schedule-admin.js" defer></script>
+</head>
+<body>
+<h2>Administrer Vagtplan</h2>
+<div id="calendar-container">
+    <div class="calendar-controls">
+        <button id="prev-week">Forrige uge</button>
+        <select id="calendarEmployeeId" required>
+            <option value="">Vælg medarbejder</option>
+        </select>
+        <button id="next-week">Næste uge</button>
+    </div>
+    <div class="calendar-header"></div>
+    <div class="calendar-body">
+        <div class="time-labels"></div>
+        <div class="calendar"></div>
+    </div>
+    <div class="shift-info">
+        <h3>Opret vagt</h3>
+        <form id="shiftForm">
+            <input type="number" id="shiftId" hidden>
+            <label for="employeeId">Medarbejder:</label>
+            <select id="employeeId" required>
+                <option value="">Vælg medarbejder</option>
+            </select>
+            <label for="date">Dato:</label>
+            <input type="date" id="date" required>
+
+            <label for="startTime">Start Tid:</label>
+            <input type="time" id="startTime" required>
+
+            <label for="endTime">Slut Tid:</label>
+            <input type="time" id="endTime" required>
+            <div id="error-message" class="error-message" style="display: none;"></div>
+            <button id="save-shift" type="submit">Save Shift</button>
+        </form>
+        <button id="cancel-shift" class="cancel">Cancel</button>
+    </div>
+</div>
+<script src="/header/header.js"></script>
+</body>
+</html>

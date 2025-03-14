@@ -1,0 +1,19 @@
+.seat-container {
+    display: grid;
+    gap: 5px;
+    margin: 20px;
+}
+
+.seat {
+    width: 30px;
+    height: 30px;
+    background: #c5c5c5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    font-size: 12px;
+    font-weight: bold;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}

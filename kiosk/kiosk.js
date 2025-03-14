@@ -1,5 +1,6 @@
-//const URL = 'http://localhost:8080/api/products';
-const URL = 'https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net/api/products';
+const URL = 'http://localhost:8080/api/products';
+//const URL = 'https://kinoxpbackend-fvaccreadvb9exd8.northeurope-01.azurewebsites.net/api/products';
+const orderURL = "http://localhost:8080/api/orders";
 
 //midlertidige placeholder billeder til udvikling
 const categoryImages = {
@@ -64,9 +65,20 @@ async function fetchProducts() {
 }
 
 function addToOrder(product) {
-    cart.push(product);
+    // Find om produktet allerede er i kurven
+    let existingItem = cart.find(item => item.id === product.id);
+
+    if (existingItem) {
+        // Hvis produktet findes, øg quantity
+        existingItem.quantity++;
+    } else {
+        // Hvis produktet ikke findes, tilføj det med quantity 1
+        cart.push({ ...product, quantity: 1 });
+    }
+
     renderCart();
 }
+
 
 function renderCart() {
     const orderList = document.getElementById("order-list");
@@ -102,7 +114,8 @@ function removeProductFromOrder(product) {
 }
 
 function updateTotal() {
-    const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+    const total = cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+
     console.log("Total opdateret til:", total);
     document.getElementById("order-total").textContent = `${total.toFixed(2)}`;
 }
@@ -113,7 +126,49 @@ cancelButton.addEventListener("click", () =>{
     renderCart()
 })
 
+async function submitOrder() {
+    if (cart.length === 0) {
+        alert("kurven er tom");
+        return;
+    }
 
+    const totalPrice = cart.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+
+    const orderData = {
+        totalPrice: totalPrice,
+        items: cart.map(item => ({
+           product: {id: item.id},
+            quantity: Number(item.quantity),
+            subTotal: Number(item.price) * Number(item.quantity)
+        }))
+    };
+
+    console.log(JSON.stringify(orderData, null, 2));
+
+    try {
+        const response = await fetch(orderURL, {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Fejl ved bestilling: ${response.status}`);
+        }
+
+        cart.length = 0;
+        renderCart();
+
+    } catch (error) {
+        console.error("Fejlen er:", error);
+    }
+}
+
+document.getElementById("confirm-purchase").addEventListener("click", ()=> {
+    submitOrder();
+    alert('ordre bekræftet')
+
+});
 
 
 fetchProducts();
