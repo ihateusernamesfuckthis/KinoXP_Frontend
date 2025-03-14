@@ -28,28 +28,21 @@ async function fetchMovieShowings(movieId) {
     }
 }
 
-
-function getWeekRange() {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-
-    const diffToMonday = (dayOfWeek + 6) % 7;
-
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - diffToMonday);
-
+function getWeekRange(monday) {
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
-
-    // Format dates to YYYY-MM-DD for comparison
-    const mondayStr = monday.toISOString().split("T")[0];
-    const sundayStr = sunday.toISOString().split("T")[0];
-
-    return { monday: mondayStr, sunday: sundayStr };
+    return { monday: formatDateToISO(monday), sunday: formatDateToISO(sunday) };
 }
+
 async function displayMovies(movieId, movieTitle) {
     const movieShowings = await fetchMovieShowings(movieId);
-    const { monday, sunday } = getWeekRange();
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+
+
+
     const container = document.getElementById('movieSchedule');
     clearContainer(container);
 
@@ -57,13 +50,15 @@ async function displayMovies(movieId, movieTitle) {
     titleElement.textContent = movieTitle;
     container.appendChild(titleElement);
 
-    const groupedByDate = groupMovieShowingsByDate(movieShowings, monday, sunday);
-    const daysOfWeek = getDaysOfWeek();
+    const groupedByDate = groupMovieShowingsByDate(movieShowings, today, today);
+    const danishDaysOfWeek = [ "Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
 
-    daysOfWeek.forEach((day, index) => {
-        const dayDate = getDayDate(index);
+    for (let i = 0; i < 7; i++) {
+        const dayDate = new Date(today);
+        dayDate.setDate(today.getDate() + i);
+
         const dayStr = formatDateToISO(dayDate);
-        const dayDiv = createDayContainer(day, dayStr);
+        const dayDiv = createDayContainer(danishDaysOfWeek[(today.getDay() + i) % 7], dayStr);
 
         if (groupedByDate[dayStr]) {
             const sortedMovies = sortMoviesByStartTime(groupedByDate[dayStr]);
@@ -75,8 +70,9 @@ async function displayMovies(movieId, movieTitle) {
             const noMovies = createNoMoviesMessage();
             dayDiv.appendChild(noMovies);
         }
+
         container.appendChild(dayDiv);
-    });
+    }
 }
 
 
@@ -99,19 +95,21 @@ function groupMovieShowingsByDate(movieShowings, monday, sunday) {
     return groupedByDate;
 }
 
-function getDaysOfWeek() {
-    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-}
 
-function getDayDate(index) {
-    const dayDate = new Date();
-    dayDate.setDate(new Date().getDate() - new Date().getDay() + index);
-    return dayDate;
-}
 
 function formatDateToISO(date) {
-    return date.toISOString().split("T")[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
+
+function normalizeDateToLocal(date) {
+    date.setHours(0, 0, 0, 0);
+    return date;
+}
+
+
 
 function createDayContainer(day, dayStr) {
     const dayDiv = document.createElement('div');
@@ -150,7 +148,7 @@ function createMovieShowingDiv(movie) {
 
 function createNoMoviesMessage() {
     const noMovies = document.createElement('p');
-    noMovies.textContent = "No movies scheduled";
+    noMovies.textContent = "Ingen film for idag";
     return noMovies;
 }
 

@@ -16,12 +16,13 @@ function displayMovies(movies) {
         const movieElement = document.createElement("div");
         movieElement.classList.add("movie-card");
 
-        const imageUrl = `${URL}${movie.pictureUrl}`;
+        const imageUrl = `../..${movie.pictureUrl}`;
 
         console.log(movie.name)
         movieElement.innerHTML = `
             <img src="${imageUrl}" alt="${movie.name}" class="movie-image" onerror="this.onerror=null; this.src='/movieShowing/images/default.webp';">
             <div class="button-container">
+                <h3>${movie.name}</h3>
                 <button onclick="readMore(${movie.id})">Læs mere</button>
                 <button onclick="bookMovie(${movie.id}, '${movie.name}')">Book</button>
             </div>
