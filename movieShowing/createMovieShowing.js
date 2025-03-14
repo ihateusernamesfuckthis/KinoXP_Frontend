@@ -127,7 +127,7 @@ const createDaysInRange = (startDate, endDate) => {
 
 const fillOutSelect = async () => {
     try {
-        const movieResponse = await fetch(`${url}/api/movie/allmovies`);
+        const movieResponse = await fetch(`${url}/api/movie`);
         if (!movieResponse.ok) throw new Error("Failed to fetch movies");
 
         const movies = await movieResponse.json();
