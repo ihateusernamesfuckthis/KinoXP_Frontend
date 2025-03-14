@@ -28,11 +28,6 @@ async function fetchMovieShowings(movieId) {
     }
 }
 
-function getWeekRange(monday) {
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    return { monday: formatDateToISO(monday), sunday: formatDateToISO(sunday) };
-}
 
 async function displayMovies(movieId, movieTitle) {
     const movieShowings = await fetchMovieShowings(movieId);
@@ -40,7 +35,9 @@ async function displayMovies(movieId, movieTitle) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-
+    const startOfWeek = new Date(today);
+    const endOfWeek = new Date();
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
 
     const container = document.getElementById('movieSchedule');
@@ -50,7 +47,7 @@ async function displayMovies(movieId, movieTitle) {
     titleElement.textContent = movieTitle;
     container.appendChild(titleElement);
 
-    const groupedByDate = groupMovieShowingsByDate(movieShowings, today, today);
+    const groupedByDate = groupMovieShowingsByDate(movieShowings, formatDateToISO(startOfWeek), formatDateToISO(endOfWeek));
     const danishDaysOfWeek = [ "Søndag", "Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag"];
 
     for (let i = 0; i < 7; i++) {
@@ -82,10 +79,10 @@ function clearContainer(container) {
     container.innerHTML = "";
 }
 
-function groupMovieShowingsByDate(movieShowings, monday, sunday) {
+function groupMovieShowingsByDate(movieShowings, startOfWeek, endOfWeek) {
     const groupedByDate = {};
     movieShowings.forEach(showing => {
-        if (showing.date >= monday && showing.date <= sunday) {
+        if (showing.date >= startOfWeek && showing.date <= endOfWeek) {
             if (!groupedByDate[showing.date]) {
                 groupedByDate[showing.date] = [];
             }
@@ -129,7 +126,7 @@ function sortMoviesByStartTime(movies) {
 function createMovieShowingDiv(movie) {
     const movieDiv = document.createElement('div');
     movieDiv.classList.add("movie-showing");
-    movieDiv.textContent = `Hall ${movie.movieHall} (${movie.startTime} - ${movie.endTime})`;
+    movieDiv.textContent = `Sal ${movie.movieHall} (${movie.startTime} - ${movie.endTime})`;
 
     const link = document.createElement("a")
     link.href="./booking.html"

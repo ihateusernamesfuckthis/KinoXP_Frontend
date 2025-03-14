@@ -63,18 +63,27 @@ function createSeatLayout(rowLength, seatLength, bookedSeats) {
             container.appendChild(seatElement);
         }
     }
+    const line = document.createElement('div');
+    line.classList.add('seat-line');
+
+    line.style.gridColumn = `span ${seatLength}`
+    container.appendChild(line);
+
 }
 
 function createTicketSelection(rowLength, seatLength) {
+    const buttonContainer = document.createElement('div');
+    buttonContainer.classList.add('button-container');
+
     const ticketInput = document.createElement('input');
     ticketInput.type = 'number';
     ticketInput.min = 1;
     ticketInput.max = rowLength * seatLength;
-    ticketInput.placeholder = 'Number of tickets';
+    ticketInput.placeholder = 'pladser';
     ticketInput.id = 'ticketInput';
 
     const confirmButton = document.createElement('button');
-    confirmButton.textContent = 'Confirm Tickets';
+    confirmButton.textContent = 'Vælg antal pladser';
     confirmButton.onclick = function () {
         maxTickets = parseInt(ticketInput.value) || 0;
         selectedSeats = [];
@@ -90,7 +99,7 @@ function createTicketSelection(rowLength, seatLength) {
     };
 
     const buyButton = document.createElement('button');
-    buyButton.textContent = 'Buy Ticket';
+    buyButton.textContent = 'Køb billeter';
     buyButton.id = 'buyButton';
     buyButton.disabled = true;
     buyButton.onclick = function () {
@@ -106,10 +115,11 @@ function createTicketSelection(rowLength, seatLength) {
         updateBuyButton();
     };
 
+    buttonContainer.appendChild(ticketInput);
+    buttonContainer.appendChild(confirmButton);
+    buttonContainer.appendChild(buyButton);
 
-    document.body.appendChild(ticketInput);
-    document.body.appendChild(confirmButton);
-    document.body.appendChild(buyButton);
+    document.body.appendChild(buttonContainer);
 }
 
 function seatClicked(row, col, seat) {
@@ -122,7 +132,7 @@ function seatClicked(row, col, seat) {
             selectedSeats.push(seatKey);
             seat.style.backgroundColor = "#50f887";
         } else {
-            alert("You've already selected the maximum number of tickets!");
+            alert("Du har allerede valgt alle pladser!");
         }
     }
 
@@ -175,7 +185,7 @@ function bookSeats(selectedSeats) {
             then(response => response.json())
                 .then(updatedMovieShowing => {
                     console.log('MovieShowing updated successfully:', updatedMovieShowing);
-                    alert('Tickets Purchased for: ' + JSON.stringify(selectedSeats));
+                    alert('Billeter købt for plads: ' + JSON.stringify(selectedSeats));
 
 
                     document.querySelectorAll('.seat').forEach(seat => {
