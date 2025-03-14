@@ -45,6 +45,10 @@ body {
 .calendar-controls {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
+}
+.calendar-controls #calendarEmployeeId {
+    margin: 0;
 }
 
 .calendar {
@@ -137,16 +141,17 @@ body {
     margin-bottom: 5px;
 }
 
-.shift-info button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
+#cancel-shift {
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    color: var(--accent-color);
+    position: absolute;
+    top: 15px;
+    right: 15px;
     cursor: pointer;
 }
-
-.shift-info button.cancel {
-    background-color: #dc3545;
+#cancel-shift:hover {
+    color: var(--primary-color);
 }
 
 #shiftForm {
