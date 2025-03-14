@@ -44,12 +44,9 @@ function createSeatLayout(rowLength, seatLength, bookedSeats) {
         for (let col = 0; col < seatLength; col++) {
             const seatElement = document.createElement('div');
             seatElement.classList.add('seat');
+            seatElement.dataset.row = row + 1;
+            seatElement.dataset.col = col + 1;
 
-            // Set data-row and data-col based on 1-based index
-            seatElement.dataset.row = row + 1;  // Convert to 1-based index
-            seatElement.dataset.col = col + 1;  // Convert to 1-based index
-
-            // Find the corresponding seat data from bookedSeats
             const seatData = bookedSeats.find(seat => seat.rowsNumber === row + 1 && seat.seatNumber === col + 1);
 
             if (seatData && seatData.booked) {
@@ -58,7 +55,7 @@ function createSeatLayout(rowLength, seatLength, bookedSeats) {
             } else {
                 seatElement.style.backgroundColor = '';
                 seatElement.onclick = function () {
-                    seatClicked(row + 1, col + 1, seatElement);  // Pass 1-based row/col
+                    seatClicked(row + 1, col + 1, seatElement);
                 };
             }
 
@@ -81,12 +78,14 @@ function createTicketSelection(rowLength, seatLength) {
         maxTickets = parseInt(ticketInput.value) || 0;
         selectedSeats = [];
 
-
         document.querySelectorAll('.seat').forEach(seat => {
-            seat.style.backgroundColor = "";
+            const isBooked = seat.style.pointerEvents === 'none';
+            if (!isBooked) {
+                seat.style.backgroundColor = "";
+            }
         });
 
-        updateBuyButton();
+        updateBuyButton()
     };
 
     const buyButton = document.createElement('button');
@@ -95,13 +94,11 @@ function createTicketSelection(rowLength, seatLength) {
     buyButton.disabled = true;
     buyButton.onclick = function () {
         bookSeats(selectedSeats)
-        alert('Tickets Purchased for: ' + JSON.stringify(selectedSeats));
-
         document.querySelectorAll('.seat').forEach(seat => {
             const seatKey = `${seat.dataset.row}-${seat.dataset.col}`;
             if (selectedSeats.includes(seatKey)) {
-                seat.style.backgroundColor = "#ff4141"; // Change color to indicate booked
-                seat.style.pointerEvents = 'none'; // Disable further clicks on booked seats
+                seat.style.backgroundColor = "#ff4141";
+                seat.style.pointerEvents = 'none';
             }
         });
 
@@ -115,7 +112,7 @@ function createTicketSelection(rowLength, seatLength) {
 }
 
 function seatClicked(row, col, seat) {
-    const seatKey = `${row}-${col}`;  // 1-based index for backend
+    const seatKey = `${row}-${col}`;
     if (selectedSeats.includes(seatKey)) {
         selectedSeats = selectedSeats.filter(s => s !== seatKey);
         seat.style.backgroundColor = "";

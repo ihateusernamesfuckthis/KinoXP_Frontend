@@ -22,22 +22,46 @@ nav {
     gap: 40px;
 }
 
-#entry-page-buttons a {
-    text-decoration: none;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: background 0.3s ease-in-out;
-}
-
-#entry-page-buttons a:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
 
 .container {
     padding-top: 10px
 }
 
+.dropbtn {
+    background-color: #f18dbe;
+    color: white;
+    padding: 20px 24px;
+    font-size: 20px;
+    border: none;
+    border-radius: 8px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    color: black;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 14px 18px;
+    font-size: 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd; border-radius: 5px}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {    background-color: #ff7ba6;}

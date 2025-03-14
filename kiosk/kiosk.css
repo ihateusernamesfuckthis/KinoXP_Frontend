@@ -72,7 +72,7 @@ body {
 #order-summary {
     position: fixed;
     right: 20px; /* Afstand fra højre side */
-    top: 60px; /* Afstand fra toppen */
+    top: 100px; /* Afstand fra toppen */
     bottom: 100px;
     width: 300px; /* Fast bredde */
     background: white;
